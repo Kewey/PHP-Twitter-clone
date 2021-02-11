@@ -50,15 +50,22 @@ class User implements UserInterface
     private $retweets;
 
     /**
-     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="follow")
+     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="follow")
      */
     private $followers;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="followers")
+     */
+    private $follow;
 
     public function __construct()
     {
         $this->tweets = new ArrayCollection();
         $this->retweets = new ArrayCollection();
         $this->followers = new ArrayCollection();
+        $this->users = new ArrayCollection();
+        $this->follow = new ArrayCollection();
     }
 
     public function __toString():string
@@ -197,27 +204,51 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection|User[]
+     * @return Collection|self[]
      */
     public function getFollowers(): Collection
     {
         return $this->followers;
     }
 
-    public function addFollower(User $follower): self
+    public function addFollower(self $follower): self
     {
         if (!$this->followers->contains($follower)) {
             $this->followers[] = $follower;
-            $follower->addFollow($this);
         }
 
         return $this;
     }
 
-    public function removeFollower(User $follower): self
+    public function removeFollower(self $follower): self
     {
-        if ($this->followers->removeElement($follower)) {
-            $follower->removeFollow($this);
+        $this->followers->removeElement($follower);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|self[]
+     */
+    public function getFollow(): Collection
+    {
+        return $this->follow;
+    }
+
+    public function addFollow(self $follow): self
+    {
+        if (!$this->follow->contains($follow)) {
+            $this->follow[] = $follow;
+            $follow->addFollower($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFollow(self $follow): self
+    {
+        if ($this->follow->removeElement($follow)) {
+            $follow->removeFollower($this);
         }
 
         return $this;

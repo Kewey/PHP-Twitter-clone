@@ -1,16 +1,11 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
-
-        {% block javascripts %}{% endblock %}
-    </head>
-    <body>
-        <a href={{ path('tweet') }}>Accueil</a>
-        <a href={{ path('user', {username: 'jojo'}) }}>Profil</a>
-        <a href={{ path('app_logout') }}>Deconnexion</a>
-        {% block body %}{% endblock %}
-    </body>
+	<head>
+		<meta charset="UTF-8" />
+		<title>{% block title %}Welcome!{% endblock %}</title>
+		{% block stylesheets %}{% endblock %} {% block javascripts %}{% endblock %}
+	</head>
+	<body>
+		{% block body %}{% endblock %}
+	</body>
 </html>
