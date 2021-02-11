@@ -1,20 +1,17 @@
-{% extends 'base.html.twig' %}
+{% extends 'base.html.twig' %} {% block title %}Hello TweetController!{%
+endblock %} {% block body %}
 
-{% block title %}Hello TweetController!{% endblock %}
+<div class="container">
+	<h1>Tous les derniers Tweets</h1>
+	{{ form(form) }}
 
-{% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+	{% for tweet in tweets|sort((a,b) => b.createdAt <=> a.createdAt) %}
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+	<h3>{{ tweet.author }}</h3>
+	<p>{{ tweet.content }}</p>
+	<p>{{ tweet.createdAt | date("%d") }}</p>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/Users/jorda/Documents/ECV/GIT/twitter-clone/src/Controller/TweetController.php'|file_link(0) }}">src/Controller/TweetController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/Users/jorda/Documents/ECV/GIT/twitter-clone/templates/tweet/index.html.twig'|file_link(0) }}">templates/tweet/index.html.twig</a></code></li>
-    </ul>
+	{% endfor %}
 </div>
+
 {% endblock %}

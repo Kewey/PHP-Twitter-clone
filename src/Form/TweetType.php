@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Tweet;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -13,9 +14,7 @@ class TweetType extends AbstractType
     {
         $builder
             ->add('content')
-            // ->add('createdAt')
-            // ->add('author')
-            // ->add('retweets')
+            ->add('Tweeter', SubmitType::class)
         ;
     }
 

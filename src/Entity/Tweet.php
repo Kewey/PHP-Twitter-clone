@@ -30,13 +30,13 @@ class Tweet
     private $createdAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity=user::class, inversedBy="tweets")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="tweets")
      * @ORM\JoinColumn(nullable=false)
      */
     private $author;
 
     /**
-     * @ORM\ManyToMany(targetEntity=user::class, inversedBy="retweets")
+     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="retweets")
      */
     private $retweets;
 
@@ -74,12 +74,12 @@ class Tweet
         return $this;
     }
 
-    public function getAuthor(): ?user
+    public function getAuthor(): ?User
     {
         return $this->author;
     }
 
-    public function setAuthor(?user $author): self
+    public function setAuthor(?User $author): self
     {
         $this->author = $author;
 
@@ -87,14 +87,14 @@ class Tweet
     }
 
     /**
-     * @return Collection|user[]
+     * @return Collection|User[]
      */
     public function getRetweets(): Collection
     {
         return $this->retweets;
     }
 
-    public function addRetweet(user $retweet): self
+    public function addRetweet(User $retweet): self
     {
         if (!$this->retweets->contains($retweet)) {
             $this->retweets[] = $retweet;
@@ -103,7 +103,7 @@ class Tweet
         return $this;
     }
 
-    public function removeRetweet(user $retweet): self
+    public function removeRetweet(User $retweet): self
     {
         $this->retweets->removeElement($retweet);
 
