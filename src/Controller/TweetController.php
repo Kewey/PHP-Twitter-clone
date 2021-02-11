@@ -41,9 +41,6 @@ class TweetController extends AbstractController
             // 'controller_name' => 'TweetController',
             'form' => $form->createView(),
             'tweets' => $user->getTweets(),
-
-
-
         ]);
     }
 }

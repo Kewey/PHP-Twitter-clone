@@ -7,9 +7,9 @@ endblock %} {% block body %}
 
 	{% for tweet in tweets|sort((a,b) => b.createdAt <=> a.createdAt) %}
 
-	<h3>{{ tweet.author }}</h3>
+	<a href={{ path('user', {username: tweet.author}) }}>{{ tweet.author }}</a>
 	<p>{{ tweet.content }}</p>
-	<p>{{ tweet.createdAt | date("%d") }}</p>
+	<p>{{ tweet.createdAt | ago(locale='fr') }}</p>
 
 	{% endfor %}
 </div>

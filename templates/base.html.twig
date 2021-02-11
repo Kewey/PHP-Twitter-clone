@@ -8,6 +8,9 @@
         {% block javascripts %}{% endblock %}
     </head>
     <body>
+        <a href={{ path('tweet') }}>Accueil</a>
+        <a href={{ path('user', {username: 'jojo'}) }}>Profil</a>
+        <a href={{ path('app_logout') }}>Deconnexion</a>
         {% block body %}{% endblock %}
     </body>
 </html>

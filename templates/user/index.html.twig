@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %} {% block title %}Hello UserController!{% endblock
+%} {% block body %}
+
+<h1>{{ user.username }}</h1>
+
+{% for tweet in tweets|sort((a,b) => b.createdAt <=> a.createdAt) %}
+
+<h3>{{ tweet.author }}</h3>
+<p>{{ tweet.content }}</p>
+<p>{{ tweet.createdAt | ago(locale='fr') }}</p>
+
+{% endfor %} {% endblock %}
