@@ -2,6 +2,10 @@
 %} {% block container %}
 
 <h1>{{ user.username }}</h1>
+<a href={{ path('user_followers', {username: user.username}) }}>Followers :{{ user.followers | length }}</a>
+<a href={{ path('user_follows', {username: user.username}) }}>Follows :{{ user.follow | length }}</a>
+
+{{ form(followForm) }}
 
 {% for tweet in tweets|sort((a,b) => b.createdAt <=> a.createdAt) %}
 

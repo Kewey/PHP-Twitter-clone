@@ -17,15 +17,20 @@ class TweetController extends AbstractController
      */
     public function index(Request $request): Response
     {
+        $user = $this->getUser();
 
+        $tweetList = [];
+        $tweetList= array_merge($tweetList, $user->getTweets()->toArray());
+        
+        foreach ($user->getFollow() as $key => $follow) {
+            $tweetList= array_merge($tweetList, $follow->getTweets()->toArray());
+        }
+                
+        
         $tweet = new Tweet();
 
         $form = $this->createForm(TweetType::class, $tweet);
-
-        $user = $this->getUser();
-
-
-
+        
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $tweet = $form->getData();
@@ -40,7 +45,7 @@ class TweetController extends AbstractController
         return $this->render('tweet/index.html.twig', [
             // 'controller_name' => 'TweetController',
             'form' => $form->createView(),
-            'tweets' => $user->getTweets(),
+            'tweets' => $tweetList,
         ]);
     }
 }

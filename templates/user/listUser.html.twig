@@ -1,0 +1,9 @@
+{% extends 'logged.html.twig' %} {% block title %}Hello UserController!{% endblock
+%} {% block container %}
+
+<h1>Vos {{type}}</h1>
+
+{% for follower in list %}
+<a href={{ path('user', {username: follower.username}) }}>{{ follower.username }}</a>
+
+{% endfor %} {% endblock %}
