@@ -1,0 +1,39 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	font-family: 'montserrat';
+	font-weight: 400;
+	background-color: #f4f4f4;
+}
+
+.container {
+	max-width: 1300px;
+	margin: 0 auto;
+}
+
+.card-tweet {
+	padding: 20px;
+	background: #fff;
+}
+
+.card-tweet a {
+	font-weight: bold;
+	display: inline-block;
+	margin-bottom: 10px;
+	text-decoration: none;
+	color: #6ae;
+}
+
+.card-tweet a:hover {
+	text-decoration: underline;
+}
+
+.card-tweet .tweet-time {
+	font-size: 12px;
+	margin-top: 10px;
+	color: #888;
+}

@@ -6,11 +6,11 @@ endblock %} {% block container %}
 	{{ form(form) }}
 
 	{% for tweet in tweets|sort((a,b) => b.createdAt <=> a.createdAt) %}
-
-	<a href={{ path('user', {username: tweet.author}) }}>{{ tweet.author }}</a>
-	<p>{{ tweet.content }}</p>
-	<p>{{ tweet.createdAt | ago(locale='fr') }}</p>
-
+    <div class="card-tweet">
+        <a href={{ path('user', {username: tweet.author}) }}>{{ tweet.author }}</a>
+        <p>{{ tweet.content }}</p>
+        <p class="tweet-time">{{ tweet.createdAt | ago(locale='fr') }}</p>
+    </div>
 	{% endfor %}
 </div>
 
