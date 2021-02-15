@@ -1,0 +1,13 @@
+{% extends 'logged.html.twig' %} 
+{% block title %}Hello TweetController!{% endblock %} 
+{% block container %}
+<div class="container">
+	<h1>Les retweeters</h1>
+    {% for retweet in retweets %}
+    <div>
+        <a href={{ path('user', {username: retweet.user.username}) }}>{{ retweet.user.username }}</a>
+    </div>
+	{% endfor %}
+</div>
+
+{% endblock %}

@@ -36,7 +36,7 @@ class Tweet
     private $author;
 
     /**
-     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="retweets")
+     * @ORM\OneToMany(targetEntity=Retweet::class, mappedBy="tweet", orphanRemoval=true)
      */
     private $retweets;
 
@@ -44,6 +44,7 @@ class Tweet
     {
         $this->retweets = new ArrayCollection();
     }
+
 
     public function getId(): ?int
     {
@@ -87,25 +88,31 @@ class Tweet
     }
 
     /**
-     * @return Collection|User[]
+     * @return Collection|Retweet[]
      */
     public function getRetweets(): Collection
     {
         return $this->retweets;
     }
 
-    public function addRetweet(User $retweet): self
+    public function addRetweet(Retweet $retweet): self
     {
         if (!$this->retweets->contains($retweet)) {
             $this->retweets[] = $retweet;
+            $retweet->setTweet($this);
         }
 
         return $this;
     }
 
-    public function removeRetweet(User $retweet): self
+    public function removeRetweet(Retweet $retweet): self
     {
-        $this->retweets->removeElement($retweet);
+        if ($this->retweets->removeElement($retweet)) {
+            // set the owning side to null (unless already changed)
+            if ($retweet->getTweet() === $this) {
+                $retweet->setTweet(null);
+            }
+        }
 
         return $this;
     }

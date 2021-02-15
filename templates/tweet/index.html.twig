@@ -1,17 +1,11 @@
-{% extends 'logged.html.twig' %} {% block title %}Hello TweetController!{%
-endblock %} {% block container %}
-
+{% extends 'logged.html.twig' %} 
+{% block title %}Hello TweetController!{% endblock %} 
+{% block container %}
 <div class="container">
 	<h1>Tous les derniers Tweets</h1>
-	{{ form(form) }}
+	{{ form(createTweet) }}
 
-	{% for tweet in tweets|sort((a,b) => b.createdAt <=> a.createdAt) %}
-    <div class="card-tweet">
-        <a href={{ path('user', {username: tweet.author}) }}>{{ tweet.author }}</a>
-        <p>{{ tweet.content }}</p>
-        <p class="tweet-time">{{ tweet.createdAt | ago(locale='fr') }}</p>
-    </div>
-	{% endfor %}
+    {% include "tweet/tweet.html.twig" %}
 </div>
 
 {% endblock %}

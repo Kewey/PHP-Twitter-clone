@@ -16,7 +16,7 @@ class UserController extends AbstractController
      */
     public function index(string $username, Request $request): Response
     {
-        
+
         $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(['username' => $username]);
 
         $form = $this->createForm(FollowType::class);
@@ -32,11 +32,11 @@ class UserController extends AbstractController
             $entityManager->flush();
             return $this->redirectToRoute('user', ['username' => $username]);
         }
-            
+
         if (!$user) {
             return $this->render('404.html.twig');
         }
-        
+
         return $this->render('user/index.html.twig', [
             'user' => $user,
             'tweets' => $user->getTweets(),
@@ -50,13 +50,13 @@ class UserController extends AbstractController
      */
     public function followers(string $username): Response
     {
-        
+
         $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(['username' => $username]);
-            
+
         if (!$user) {
             return $this->render('404.html.twig');
         }
-        
+
         return $this->render('user/listUser.html.twig', [
             'user' => $user,
             'list' => $user->getFollowers(),
@@ -69,13 +69,13 @@ class UserController extends AbstractController
      */
     public function follows(string $username): Response
     {
-        
+
         $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(['username' => $username]);
-            
+
         if (!$user) {
             return $this->render('404.html.twig');
         }
-        
+
         return $this->render('user/listUser.html.twig', [
             'user' => $user,
             'list' => $user->getFollow(),

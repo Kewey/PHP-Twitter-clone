@@ -45,11 +45,6 @@ class User implements UserInterface
     private $tweets;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Tweet::class, mappedBy="retweets")
-     */
-    private $retweets;
-
-    /**
      * @ORM\ManyToMany(targetEntity=User::class, inversedBy="follow")
      */
     private $followers;
@@ -59,13 +54,18 @@ class User implements UserInterface
      */
     private $follow;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Retweet::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $retweets;
+
     public function __construct()
     {
         $this->tweets = new ArrayCollection();
-        $this->retweets = new ArrayCollection();
         $this->followers = new ArrayCollection();
         $this->users = new ArrayCollection();
         $this->follow = new ArrayCollection();
+        $this->retweets = new ArrayCollection();
     }
 
     public function __toString():string
@@ -177,33 +177,6 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection|Tweet[]
-     */
-    public function getRetweets(): Collection
-    {
-        return $this->retweets;
-    }
-
-    public function addRetweet(Tweet $retweet): self
-    {
-        if (!$this->retweets->contains($retweet)) {
-            $this->retweets[] = $retweet;
-            $retweet->addRetweet($this);
-        }
-
-        return $this;
-    }
-
-    public function removeRetweet(Tweet $retweet): self
-    {
-        if ($this->retweets->removeElement($retweet)) {
-            $retweet->removeRetweet($this);
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection|self[]
      */
     public function getFollowers(): Collection
@@ -249,6 +222,36 @@ class User implements UserInterface
     {
         if ($this->follow->removeElement($follow)) {
             $follow->removeFollower($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Retweet[]
+     */
+    public function getRetweets(): Collection
+    {
+        return $this->retweets;
+    }
+
+    public function addRetweet(Retweet $retweet): self
+    {
+        if (!$this->retweets->contains($retweet)) {
+            $this->retweets[] = $retweet;
+            $retweet->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRetweet(Retweet $retweet): self
+    {
+        if ($this->retweets->removeElement($retweet)) {
+            // set the owning side to null (unless already changed)
+            if ($retweet->getUser() === $this) {
+                $retweet->setUser(null);
+            }
         }
 
         return $this;

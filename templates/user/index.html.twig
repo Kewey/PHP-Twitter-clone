@@ -7,10 +7,6 @@
 
 {{ form(followForm) }}
 
-{% for tweet in tweets|sort((a,b) => b.createdAt <=> a.createdAt) %}
+  {% include "tweet/tweet.html.twig" %}
 
-<h3>{{ tweet.author }}</h3>
-<p>{{ tweet.content }}</p>
-<p>{{ tweet.createdAt | ago(locale='fr') }}</p>
-
-{% endfor %} {% endblock %}
+{% endblock %}
