@@ -1,11 +1,17 @@
 {% extends 'logged.html.twig' %} {% block title %}Hello UserController!{% endblock
 %} {% block container %}
 
-<h1>{{ user.username }}</h1>
-<a href={{ path('user_followers', {username: user.username}) }}>Followers :{{ user.followers | length }}</a>
-<a href={{ path('user_follows', {username: user.username}) }}>Follows :{{ user.follow | length }}</a>
+<div class="flex center-y">
+  <h1 style="margin-right: 20px">{{ user.username }}</h1>
+  <div class="follow">
+  {{ form(followForm) }}
+  </div>
+</div>
+<div class="flex">
+  <a class="btn" style="margin-right: 20px" href={{ path('user_followers', {username: user.username}) }}>Followers : {{ user.followers | length }}</a>
+  <a class="btn" href={{ path('user_follows', {username: user.username}) }}>Follows : {{ user.follow | length }}</a>
+</div>
 
-{{ form(followForm) }}
 
   {% include "tweet/tweet.html.twig" %}
 

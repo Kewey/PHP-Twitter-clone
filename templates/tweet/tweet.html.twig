@@ -10,11 +10,11 @@
 
         {# Si c'est un retweet on affiche le retweeter #}
         {% if tweetData[1] %}
-            <p class='tweet-rt'>{{tweetData[1].username }} a retweeté</p>
+            <p class='tweet-rt'><a href={{ path('user', {username: tweetData[1].username}) }}>{{tweetData[1].username }}</a> a retweeté</p>
         {% endif %}
-        <a href={{ path('user', {username: tweet.author}) }}>{{ tweet.author }}</a>
+        <a class="tweet-author" href={{ path('user', {username: tweet.author}) }}>{{ tweet.author }}</a>
         <p>{{ tweet.content }}</p>
-        <div>
+        <div class='flex center-y tweet-footer'>
             <p class="tweet-time">{{ tweet.createdAt | ago(locale='fr') }}</p>
     
             {# Check si le tweet a était retweeté ou non #}

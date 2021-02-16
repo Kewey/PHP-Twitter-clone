@@ -1,9 +1,11 @@
 {% extends 'base.html.twig' %}
 {% block body %}
+    <div class="menu">
     <a href={{ path('tweet') }}>Accueil</a>
     <a href={{ path('user', {username: app.user.username}) }}>Profil</a>
     <a href={{ path('app_logout') }}>Deconnexion</a>
-    <div class="container">
+    </div>
+    <div class="mt-5">
     {% block container %}{% endblock %}
     </div>
 {% endblock %}
