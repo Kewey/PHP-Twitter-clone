@@ -37,3 +37,8 @@ body {
 	margin-top: 10px;
 	color: #888;
 }
+
+.card-tweet .tweet-rt {
+	font-size: 12px;
+	margin-bottom: 10px;
+}

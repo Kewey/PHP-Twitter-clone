@@ -3,7 +3,8 @@
     <a href={{ path('tweet') }}>Accueil</a>
     <a href={{ path('user', {username: app.user.username}) }}>Profil</a>
     <a href={{ path('app_logout') }}>Deconnexion</a>
-    
+    <div class="container">
     {% block container %}{% endblock %}
+    </div>
 {% endblock %}
       

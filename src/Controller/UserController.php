@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Tweet;
 use App\Entity\User;
 use App\Form\FollowType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -11,6 +12,30 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class UserController extends AbstractController
 {
+
+    private function addTweetToTweetLine($tweetList)
+    {
+        $tweets = [];
+        foreach ($tweetList as $tweet) {
+            $tweetItem[] = [$tweet, null, $tweet->getCreatedAt()];
+            $tweets = array_merge($tweets, $tweetItem);
+            $tweetItem = null;
+        }
+        return $tweets;
+    }
+
+    private function addRetweetToTweetLine($retweets)
+    {
+        $retweetItem = [];
+        foreach ($retweets as $retweet) {
+            $tweet = $this->getDoctrine()->getRepository(Tweet::class)->findOneBy(['id' => $retweet->getTweet()]);
+            $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(['id' => $retweet->getUser()]);
+            $createdAt = $retweet->getCreatedAt();
+            $retweetItem[] = [$tweet, $user, $createdAt];
+        }
+        return $retweetItem;
+    }
+
     /**
      * @Route("/user/{username}", name="user")
      */
@@ -19,8 +44,13 @@ class UserController extends AbstractController
 
         $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(['username' => $username]);
 
-        $form = $this->createForm(FollowType::class);
+        $TweetLine = [];
 
+        $TweetLine = array_merge($TweetLine, $this->addTweetToTweetLine($user->getTweets()->toArray()));
+        $TweetLine = array_merge($TweetLine, $this->addRetweetToTweetLine($user->getRetweets()->toArray()));
+
+
+        $form = $this->createForm(FollowType::class);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -39,7 +69,7 @@ class UserController extends AbstractController
 
         return $this->render('user/index.html.twig', [
             'user' => $user,
-            'tweets' => $user->getTweets(),
+            'tweets' => $TweetLine,
             'followForm' => $form->createView(),
         ]);
     }

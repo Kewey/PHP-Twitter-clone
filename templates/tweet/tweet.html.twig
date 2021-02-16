@@ -1,31 +1,41 @@
 
 {% block tweetList %}
-  <h1>dzadazdza</h1>
-  {% for tweet in tweets|sort((a,b) => b.createdAt <=> a.createdAt) %}
-      <div class="card-tweet">
-          <a href={{ path('user', {username: tweet.author}) }}>{{ tweet.author }}</a>
-          <p>{{ tweet.content }}</p>
-          <div>
-              <p class="tweet-time">{{ tweet.createdAt | ago(locale='fr') }}</p>
-              
-              {% set isRetweet = false %}
-              {% set retweet_id = null %}
-              {% for retweet in app.user.retweets %}
-                  {% if tweet.id == retweet.tweet.id %}
-                      {% set retweet_id = retweet.id %}
-                      {% set isRetweet = true %}
-                  {% endif %}
-              {% endfor %}
-              {# {% set currentPath = path(app.request.attributes.get('_route'),
-                       app.request.attributes.get('_route_params')) %} #}
-              {% if isRetweet %}
-                  <a href={{ path('retweet_remove', {retweet_id: retweet_id}) }}>unRetweet</a>
-              {% else %}
-                  <a href={{ path('retweet', {tweet_id: tweet.id}) }}>Retweet</a>
-              {% endif %}
 
-              <a href={{ path('retweeters', {tweet_id: tweet.id}) }}>{{ tweet.retweets | length }}</a>
-          </div>
-      </div>
-    {% endfor %}
-  {% endblock %}
+  {# Tri les tweets et retweets #}
+  {% for tweetData in tweets |sort((a,b) => b[2] <=> a[2] ) %}
+
+    {# Selectionne le tweet #}
+    {% set tweet = tweetData[0] %}
+    <div class="card-tweet">
+
+        {# Si c'est un retweet on affiche le retweeter #}
+        {% if tweetData[1] %}
+            <p class='tweet-rt'>{{tweetData[1].username }} a retweeté</p>
+        {% endif %}
+        <a href={{ path('user', {username: tweet.author}) }}>{{ tweet.author }}</a>
+        <p>{{ tweet.content }}</p>
+        <div>
+            <p class="tweet-time">{{ tweet.createdAt | ago(locale='fr') }}</p>
+    
+            {# Check si le tweet a était retweeté ou non #}
+            {% set isRetweet = false %}
+            {% set retweet_id = null %}
+            {% for retweet in app.user.retweets %}
+                {% if tweet.id == retweet.tweet.id %}
+                    {% set retweet_id = retweet.id %}
+                    {% set isRetweet = true %}
+                {% endif %}
+            {% endfor %}
+
+            {% if isRetweet %}
+                <a href={{ path('retweet_remove', {retweet_id: retweet_id}) }}>unRetweet</a>
+            {% else %}
+                <a href={{ path('retweet', {tweet_id: tweet.id}) }}>Retweet</a>
+            {% endif %}
+
+            {# Affiche le nombre de rt #}
+            <a href={{ path('retweeters', {tweet_id: tweet.id}) }}>{{ tweet.retweets | length }}</a>
+        </div>
+    </div>
+  {% endfor %}
+{% endblock %}

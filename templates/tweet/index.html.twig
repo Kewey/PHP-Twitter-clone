@@ -1,11 +1,9 @@
 {% extends 'logged.html.twig' %} 
 {% block title %}Hello TweetController!{% endblock %} 
 {% block container %}
-<div class="container">
 	<h1>Tous les derniers Tweets</h1>
 	{{ form(createTweet) }}
 
     {% include "tweet/tweet.html.twig" %}
-</div>
 
 {% endblock %}

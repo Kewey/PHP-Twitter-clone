@@ -4,15 +4,41 @@ namespace App\Controller;
 
 use App\Entity\Retweet;
 use App\Entity\Tweet;
+use App\Entity\User;
 use App\Form\TweetType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 class TweetController extends AbstractController
 {
+
+    private function addTweetToTweetLine($tweetList)
+    {
+        $tweets = [];
+        foreach ($tweetList as $tweet) {
+            $tweetItem[] = [$tweet, null, $tweet->getCreatedAt()];
+            $tweets = array_merge($tweets, $tweetItem);
+            $tweetItem = null;
+        }
+        return $tweets;
+    }
+
+    private function addRetweetToTweetLine($retweet, $follow = null)
+    {
+        $tweet = $this->getDoctrine()->getRepository(Tweet::class)->findOneBy(['id' => $retweet->getTweet()]);
+        $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(['id' => $retweet->getUser()]);
+        $createdAt = $retweet->getCreatedAt();
+        $tweetItem[] = [$tweet, $user, $createdAt];
+        // verifie que le retweet n'est pas un tweet de l'utilisateur ou un follow
+        if ($tweet->getAuthor() !== $this->getUser() && $tweet->getAuthor() !== $follow) {
+            return $tweetItem;
+        } else {
+            return [];
+        }
+    }
+
     /**
      * @Route("/tweet", name="tweet")
      */
@@ -20,39 +46,24 @@ class TweetController extends AbstractController
     {
         $user = $this->getUser();
 
-        $tweetList = [];
-        $tweetList = array_merge($tweetList, $user->getTweets()->toArray());
-        foreach ($user->getRetweets()->toArray() as $key => $retweet) {
-            $tweet = $this->getDoctrine()->getRepository(Tweet::class)->findOneBy(['id' => $retweet->getTweet()]);
 
-            $isFollowed = false;
+        $TweetLine = [];
+
+        // Recupere les tweets et retweets de l'utilisateur
+        $TweetLine = array_merge($TweetLine, $this->addTweetToTweetLine($user->getTweets()->toArray()));
+        foreach ($user->getRetweets()->toArray() as $key => $retweet) {
             foreach ($user->getFollow() as $key => $follow) {
-                if ($follow->getId() ===  $tweet->getAuthor()->getId()) {
-                    $isFollowed = true;
-                }
-            }
-            if (!$isFollowed) {
-                $tweetItem[] = $tweet;
-                $tweetList = array_merge($tweetList, $tweetItem);
+                $TweetLine = array_merge($TweetLine, $this->addRetweetToTweetLine($retweet, $follow));
             }
         }
 
-
+        // Recupere les tweets des follows 
         foreach ($user->getFollow() as $key => $follow) {
-            $tweetList = array_merge($tweetList, $follow->getTweets()->toArray());
-            foreach ($follow->getRetweets()->toArray() as $key => $retweet) {
-                $tweet = $this->getDoctrine()->getRepository(Tweet::class)->findOneBy(['id' => $retweet->getTweet()]);
+            $TweetLine = array_merge($TweetLine, $this->addTweetToTweetLine($follow->getTweets()->toArray()));
 
-                $isFollowed = false;
-                foreach ($user->getFollow() as $key => $follow) {
-                    if ($follow->getId() ===  $tweet->getAuthor()->getId()) {
-                        $isFollowed = true;
-                    }
-                }
-                if (!$isFollowed) {
-                    $tweetItem[] = $tweet;
-                    $tweetList = array_merge($tweetList, $tweetItem);
-                }
+            // Recupere les retweets des follows
+            foreach ($follow->getRetweets() as $key => $retweet) {
+                $TweetLine = array_merge($TweetLine, $this->addRetweetToTweetLine($retweet));
             }
         }
 
@@ -73,7 +84,7 @@ class TweetController extends AbstractController
 
         return $this->render('tweet/index.html.twig', [
             'createTweet' => $form->createView(),
-            'tweets' => $tweetList,
+            'tweets' => $TweetLine,
         ]);
     }
 
