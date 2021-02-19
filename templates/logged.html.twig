@@ -1,9 +1,13 @@
 {% extends 'base.html.twig' %}
 {% block body %}
     <div class="menu">
-    <a href={{ path('tweet') }}>Accueil</a>
-    <a href={{ path('user', {username: app.user.username}) }}>Profil</a>
-    <a href={{ path('app_logout') }}>Deconnexion</a>
+        <a href={{ path('tweet') }}>Accueil</a>
+        <form action={{ path('search') }} role="search" method="post" >
+            <input name="search" type='search' placeholder="Recherche">
+            <button>Rechercher</button>
+        </form>
+        <a href={{ path('user', {username: app.user.username}) }}>Profil</a>
+        <a href={{ path('app_logout') }}>Deconnexion</a>
     </div>
     <div class="mt-5">
     {% block container %}{% endblock %}

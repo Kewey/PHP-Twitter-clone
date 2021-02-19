@@ -22,8 +22,6 @@ class TweetFixtures extends BaseFixture implements DependentFixtureInterface
 
     public function loadData(ObjectManager $manager)
     {
-
-
         $this->createMany(Tweet::class, 20, function (Tweet $tweet, $count) {
             $tweet->setContent(self::$list_text[$this->faker->numberBetween(0, 7)]);
             $tweet->setAuthor($this->getReference(User::class . '_' . $this->faker->numberBetween(0, 9)));

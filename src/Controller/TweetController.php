@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Retweet;
 use App\Entity\Tweet;
 use App\Entity\User;
+use App\Form\SearchType;
 use App\Form\TweetType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,6 +14,17 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class TweetController extends AbstractController
 {
+
+    /**
+     * @Route("/search", name="search")
+     */
+    public function searchAction(Request $request)
+    {
+        $request = $request->request->get('search');
+
+        return $this->redirect('/user/' . $request);
+    }
+
 
     private function addTweetToTweetLine($tweetList)
     {
@@ -66,6 +78,8 @@ class TweetController extends AbstractController
                 $TweetLine = array_merge($TweetLine, $this->addRetweetToTweetLine($retweet));
             }
         }
+
+        // TWEET
 
         $tweet = new Tweet();
 

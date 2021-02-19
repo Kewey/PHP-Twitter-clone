@@ -71,6 +71,17 @@ body {
 	font-size: 1.2rem;
 }
 
+.menu form {
+	margin-top: 0;
+}
+
+.menu form input {
+	padding: 10px;
+	border-radius: 8px;
+	border: none;
+	background: #eee;
+}
+
 .card {
 	background: #fff;
 	border-radius: 12px;

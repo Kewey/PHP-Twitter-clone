@@ -44,6 +44,11 @@ class UserController extends AbstractController
 
         $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(['username' => $username]);
 
+        if (!$user) {
+            return $this->render('404.html.twig');
+        }
+
+
         $TweetLine = [];
 
         $TweetLine = array_merge($TweetLine, $this->addTweetToTweetLine($user->getTweets()->toArray()));
@@ -61,10 +66,6 @@ class UserController extends AbstractController
             $entityManager->persist($currentUser);
             $entityManager->flush();
             return $this->redirectToRoute('user', ['username' => $username]);
-        }
-
-        if (!$user) {
-            return $this->render('404.html.twig');
         }
 
         return $this->render('user/index.html.twig', [
